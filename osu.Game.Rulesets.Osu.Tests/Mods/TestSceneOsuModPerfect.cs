@@ -79,5 +79,59 @@ namespace osu.Game.Rulesets.Osu.Tests.Mods
                 new OsuReplayFrame(1001, new Vector2(256, 192)),
             }
         });
+
+        [Test]
+        public void TestSpinnerWithoutMaxBonus()
+        {
+            CreateModTest(new ModTestData
+            {
+                Mod = new OsuModPerfect { RequireSpinnerMax = { Value = true } },
+                PassCondition = () => ((ModFailConditionTestPlayer)Player).CheckFailed(true),
+                Autoplay = false,
+                CreateBeatmap = () => new Beatmap
+                {
+                    HitObjects = new List<HitObject>
+                    {
+                        new Spinner
+                        {
+                            StartTime = 1000,
+                            EndTime = 3000,
+                            Position = new Vector2(256, 192)
+                        },
+                    },
+                },
+                ReplayFrames = new List<ReplayFrame>
+                {
+                    new OsuReplayFrame(1000, new Vector2(256, 192), OsuAction.LeftButton),
+                    new OsuReplayFrame(1500, new Vector2(256, 192), OsuAction.LeftButton),
+                    new OsuReplayFrame(2000, new Vector2(256, 192), OsuAction.LeftButton),
+                    new OsuReplayFrame(2500, new Vector2(256, 192), OsuAction.LeftButton),
+                    new OsuReplayFrame(3000, new Vector2(256, 192)),
+                }
+            });
+        }
+
+        [Test]
+        public void TestSpinnerWithoutMaxBonusNotFailing()
+        {
+            CreateModTest(new ModTestData
+            {
+                Mod = new OsuModPerfect { RequireSpinnerMax = { Value = false } },
+                PassCondition = () => ((ModFailConditionTestPlayer)Player).CheckFailed(false),
+                Autoplay = true,
+                CreateBeatmap = () => new Beatmap
+                {
+                    HitObjects = new List<HitObject>
+                    {
+                        new Spinner
+                        {
+                            StartTime = 1000,
+                            EndTime = 3000,
+                            Position = new Vector2(256, 192)
+                        },
+                    },
+                },
+            });
+        }
     }
 }
